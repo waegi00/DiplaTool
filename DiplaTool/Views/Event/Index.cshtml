@@ -1,0 +1,40 @@
+﻿@model IEnumerable<DiplaTool.Models.Event>
+
+@{
+    ViewBag.Title = "Diensteliste";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Dienst erstellen", "Create")
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Subject.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Subject.Start.Date)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject.Start.Date)
+            </td>
+            <td>
+                @Html.ActionLink("Bearbeiten", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Löschen", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,32 @@
+﻿@model DiplaTool.ViewModels.Subject.FormSubjectViewModel
+
+@{
+    ViewBag.Title = "Bearbeiten";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Baustein</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.Partial("_Form")
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Speichern" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Zurück zur Liste", "Index")
+</div>

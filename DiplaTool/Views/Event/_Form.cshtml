@@ -1,0 +1,17 @@
+﻿@model DiplaTool.ViewModels.Event.FormEventViewModel
+
+<div class="form-group">
+    @Html.LabelFor(model => model.SubjectId, new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.DropDownListFor(model => model.SubjectId, new SelectList(Model.Subjects, "Id", "Shortcut"), new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.SubjectId, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.AssigneeId, new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.DropDownListFor(model => model.AssigneeId, new SelectList(Model.Users, "Id", "UserName"), new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.AssigneeId, "", new { @class = "text-danger" })
+    </div>
+</div>

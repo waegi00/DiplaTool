@@ -1,0 +1,34 @@
+﻿@model ICollection<DiplaTool.ViewModels.Event.DashboardEventViewModel>
+
+@{
+    ViewBag.Title = "Dienstplan";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ElementAt(0).UserName)
+        </th>
+        <th>
+            @DateTime.Today.ToString("dd.MM.yyyy")
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @foreach (var @event in item.Events)
+                {
+                    @Html.DisplayFor(modelItem => @event.Subject.Shortcut)
+                }
+            </td>
+        </tr>
+            }
+
+</table>
