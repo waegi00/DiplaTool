@@ -7,16 +7,18 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                Hallo @User.Identity.GetUserName()
+                <a href="@Url.Action("Index", "Manage")">Hallo @User.Identity.GetUserName()</a>
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Abmelden</a></li>
+            <li>
+                <a href="javascript:document.getElementById('logoutForm').submit()">Abmelden</a>
+            </li>
         </ul>
     }
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Registrieren", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Anmelden", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        <li>@Html.ActionLink("Registrieren", "Register", "Account", null, new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Anmelden", "Login", "Account", null, new { id = "loginLink" })</li>
     </ul>
 }

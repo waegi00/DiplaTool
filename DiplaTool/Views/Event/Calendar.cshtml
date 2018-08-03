@@ -17,7 +17,7 @@
                     @Html.DisplayNameFor(model => model.Events.ElementAt(0).Subject.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Events.ElementAt(0).Subject.Start.Date)
+                    @Html.DisplayNameFor(model => model.Events.ElementAt(0).Date)
                 </th>
             </tr>
 
@@ -28,7 +28,7 @@
                         <a href="@Url.Action("Edit", "Subject", new { id = item.Subject.Id })">@Html.DisplayFor(modelItem => item.Subject.Name)</a>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Subject.Start.Date)
+                        @Html.DisplayFor(modelItem => item.Date)
                     </td>
                 </tr>
             }

@@ -29,7 +29,7 @@ namespace DiplaTool.Models
             var wegmuellerlu = new ApplicationUser
             {
                 Email = "lukas00@bluewin.ch",
-                UserName = "wegmuellerlu"
+                UserName = "lukas00@bluewin.ch"
             };
 
             manager.Create(wegmuellerlu, "Welcome$18");
