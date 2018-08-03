@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Drawing;
+using DiplaTool.Controllers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Exchange.WebServices.Data;
@@ -11,6 +12,16 @@ namespace DiplaTool.Models
     {
         protected override void Seed(ApplicationDbContext context)
         {
+            #region Roles
+
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            roleManager.Create(new IdentityRole("Admin"));
+            roleManager.Create(new IdentityRole("Internal"));
+            roleManager.Create(new IdentityRole("External"));
+            roleManager.Create(new IdentityRole("Apprentice"));
+
+            #endregion
+
             #region Useres
 
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
@@ -42,8 +53,8 @@ namespace DiplaTool.Models
             {
                 Shortcut = "2",
                 Name = "Dienst 2",
-                Start = Convert.ToDateTime("07:30"),
-                End = Convert.ToDateTime("12:15"),
+                Start = Convert.ToDateTime("12:15"),
+                End = Convert.ToDateTime("17:00"),
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.Busy,
                 Color = Color.FromArgb(255, 255, 0)
@@ -99,60 +110,6 @@ namespace DiplaTool.Models
             context.Subjects.Add(teilzeit);
             context.Subjects.Add(homeoffice);
             context.Subjects.Add(pikett);
-            context.SaveChanges();
-
-            #endregion
-            
-            #region Events
-
-            var eventD1 = new Event
-            {
-                Subject = dienst1,
-                Assignee = wegmuellerlu,
-                Date = DateTime.Today.Date
-            };
-
-            var eventD2 = new Event
-            {
-                Subject = dienst2,
-                Assignee = wegmuellerlu,
-                Date = DateTime.Today.Date.AddDays(1)
-            };
-
-            var eventFrei = new Event
-            {
-                Subject = frei,
-                Assignee = wegmuellerlu,
-                Date = DateTime.Today.Date.AddDays(2)
-            };
-
-            var eventTeilzeit = new Event
-            {
-                Subject = teilzeit,
-                Assignee = wegmuellerlu,
-                Date = DateTime.Today.Date.AddDays(3)
-            };
-
-            var eventHome = new Event
-            {
-                Subject = homeoffice,
-                Assignee = wegmuellerlu,
-                Date = DateTime.Today.Date.AddDays(4)
-            };
-
-            var eventtPikett = new Event
-            {
-                Subject = homeoffice,
-                Assignee = wegmuellerlu,
-                Date = DateTime.Today.Date.AddDays(4)
-            };
-
-            context.Events.Add(eventD1);
-            context.Events.Add(eventD2);
-            context.Events.Add(eventFrei);
-            context.Events.Add(eventTeilzeit);
-            context.Events.Add(eventHome);
-            context.Events.Add(eventtPikett);
             context.SaveChanges();
 
             #endregion

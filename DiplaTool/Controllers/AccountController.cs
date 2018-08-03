@@ -53,9 +53,7 @@ namespace DiplaTool.Controllers
             {
                 return View(model);
             }
-
-            // Anmeldefehler werden bezüglich einer Kontosperre nicht gezählt.
-            // Wenn Sie aktivieren möchten, dass Kennwortfehler eine Sperre auslösen, ändern Sie in "shouldLockout: true".
+            
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             if (result == SignInStatus.Success)
             {
@@ -77,23 +75,16 @@ namespace DiplaTool.Controllers
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
             var result = await UserManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                // Weitere Informationen zum Aktivieren der Kontobestätigung und Kennwortzurücksetzung finden Sie unter https://go.microsoft.com/fwlink/?LinkID=320771
-                // E-Mail-Nachricht mit diesem Link senden
-                // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                // await UserManager.SendEmailAsync(user.Id, "Konto bestätigen", "Bitte bestätigen Sie Ihr Konto. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>");
-
+                
                 return RedirectToAction("Dashboard", "Event");
             }
             AddErrors(result);
-
-            // Wurde dieser Punkt erreicht, ist ein Fehler aufgetreten; Formular erneut anzeigen.
+            
             return View(model);
         }
         

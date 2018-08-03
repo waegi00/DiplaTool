@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using System.Windows.Forms;
 using DiplaTool.Models;
 using DiplaTool.ViewModels.Event;
 using Microsoft.AspNet.Identity;
@@ -17,10 +15,10 @@ namespace DiplaTool.Controllers
     public class EventController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
-
+        
         public ActionResult Index()
         {
-            return View(_db.Events.ToList());
+            return View(_db.Events.OrderBy(x => x.Date).ThenBy(x => x.Subject.Start).ToList());
         }
 
         public ActionResult Dashboard()

@@ -10,22 +10,22 @@ namespace DiplaTool.ViewModels.Subject
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required, Display(Name = "Kürzel")]
         public string Shortcut { get; set; }
 
-        [Required]
+        [Required, Display(Name = "Name")]
         public string Name { get; set; }
 
-        [Required, DataType(DataType.Time)]
+        [Required, DataType(DataType.Time), Display(Name = "Start")]
         public DateTime Start { get; set; }
 
-        [Required, DataType(DataType.Time)]
+        [Required, DataType(DataType.Time), Display(Name = "Ende")]
         public DateTime End { get; set; }
 
-        [Required]
+        [Required, Display(Name = "Ende am nächsten Tag")]
         public bool IsEndOnNextDay { get; set; }
 
-        [Required]
+        [Required, Display(Name = "Anzeigen als")]
         public LegacyFreeBusyStatus BusyStatus { get; set; }
 
         public ICollection<LegacyFreeBusyStatus> BusyStatuses { get; set; } = new List<LegacyFreeBusyStatus>
@@ -38,7 +38,7 @@ namespace DiplaTool.ViewModels.Subject
             LegacyFreeBusyStatus.NoData
         };
 
-        [Required]
+        [Required, Display(Name = "Farbe")]
         public Color Color { get; set; }
     }
 }

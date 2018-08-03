@@ -12,5 +12,8 @@ namespace DiplaTool.ViewModels.Account
 
         [DataType(DataType.Password), Display(Name = "Passwort bestätigen"), Compare("Password", ErrorMessage = "Das Passwort entspricht nicht dem Bestätigungspasswort.")]
         public string ConfirmPassword { get; set; }
+
+        [Required, Display(Name = "Benutzername")]
+        public string UserName { get; set; }
     }
 }

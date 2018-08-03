@@ -14,7 +14,7 @@ namespace DiplaTool.Controllers
 
         public ActionResult Index()
         {
-            return View(_db.Subjects.ToList());
+            return View(_db.Subjects.OrderBy(x => x.Name).ToList());
         }
 
         public ActionResult Create()
@@ -28,7 +28,7 @@ namespace DiplaTool.Controllers
         {
             if (!ModelState.IsValid) return View(viewModel);
 
-            if (!viewModel.IsEndOnNextDay && viewModel.Start > viewModel.End)
+            if (!viewModel.IsEndOnNextDay && viewModel.Start >= viewModel.End)
             {
                 ModelState.AddModelError("Start", "Die Startzeit muss vor der Endzeit sein.");
                 return View(viewModel);
@@ -42,6 +42,7 @@ namespace DiplaTool.Controllers
                 End = viewModel.End,
                 Color = viewModel.Color,
                 BusyStatus = viewModel.BusyStatus,
+                IsEndOnNextDay = viewModel.IsEndOnNextDay
             };
 
             _db.Subjects.Add(subject);
@@ -70,7 +71,8 @@ namespace DiplaTool.Controllers
                     Start = subject.Start,
                     End = subject.End,
                     Color = subject.Color,
-                    BusyStatus = subject.BusyStatus
+                    BusyStatus = subject.BusyStatus,
+                    IsEndOnNextDay = subject.IsEndOnNextDay
                 }
             );
         }
@@ -81,6 +83,12 @@ namespace DiplaTool.Controllers
         {
             if (!ModelState.IsValid) return View(viewModel);
 
+            if (!viewModel.IsEndOnNextDay && viewModel.Start >= viewModel.End)
+            {
+                ModelState.AddModelError("Start", "Die Startzeit muss vor der Endzeit sein.");
+                return View(viewModel);
+            }
+
             var subject = _db.Subjects.Find(viewModel.Id);
             if (subject == null) return View("Error");
             subject.Shortcut = viewModel.Shortcut;
@@ -89,6 +97,7 @@ namespace DiplaTool.Controllers
             subject.End = viewModel.End;
             subject.Color = viewModel.Color;
             subject.BusyStatus = viewModel.BusyStatus;
+            subject.IsEndOnNextDay = viewModel.IsEndOnNextDay;
 
             _db.Entry(subject).State = EntityState.Modified;
             _db.SaveChanges();
