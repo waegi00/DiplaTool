@@ -16,11 +16,14 @@ namespace DiplaTool.ViewModels.Subject
         [Required]
         public string Name { get; set; }
 
-        [Required]
+        [Required, DataType(DataType.Time)]
         public DateTime Start { get; set; }
 
-        [Required]
+        [Required, DataType(DataType.Time)]
         public DateTime End { get; set; }
+
+        [Required]
+        public bool IsEndOnNextDay { get; set; }
 
         [Required]
         public LegacyFreeBusyStatus BusyStatus { get; set; }

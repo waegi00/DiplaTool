@@ -11,22 +11,28 @@ namespace DiplaTool.Controllers
     public class SubjectController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
-        
+
         public ActionResult Index()
         {
             return View(_db.Subjects.ToList());
         }
-        
+
         public ActionResult Create()
         {
             return View(new FormSubjectViewModel());
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(FormSubjectViewModel viewModel)
         {
             if (!ModelState.IsValid) return View(viewModel);
+
+            if (!viewModel.IsEndOnNextDay && viewModel.Start > viewModel.End)
+            {
+                ModelState.AddModelError("Start", "Die Startzeit muss vor der Endzeit sein.");
+                return View(viewModel);
+            }
 
             var subject = new Subject
             {
@@ -43,7 +49,7 @@ namespace DiplaTool.Controllers
             return RedirectToAction("Index");
 
         }
-        
+
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -68,7 +74,7 @@ namespace DiplaTool.Controllers
                 }
             );
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(FormSubjectViewModel viewModel)
@@ -88,7 +94,7 @@ namespace DiplaTool.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
-        
+
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -102,7 +108,7 @@ namespace DiplaTool.Controllers
             }
             return View(subject);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)

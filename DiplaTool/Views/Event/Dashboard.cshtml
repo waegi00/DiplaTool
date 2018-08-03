@@ -22,13 +22,23 @@
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
-            <td>
-                @foreach (var @event in item.Events)
-                {
-                    @Html.DisplayFor(modelItem => @event.Subject.Shortcut)
-                }
-            </td>
-        </tr>
+
+            @if (item.Events.Any())
+            {
+                <td style="background-color: @item.Events.ElementAt(0).Subject.ColorToString()">
+                    @foreach (var @event in item.Events)
+                    {
+                        @Html.DisplayFor(modelItem => @event.Subject.Shortcut)
+                    }
+                </td>
             }
+            else
+            {
+                <td>
+                    @Html.DisplayName("-")
+                </td>
+            }
+        </tr>
+    }
 
 </table>

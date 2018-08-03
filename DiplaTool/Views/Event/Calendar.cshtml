@@ -25,7 +25,7 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Subject.Name)
+                        <a href="@Url.Action("Edit", "Subject", new { id = item.Subject.Id })">@Html.DisplayFor(modelItem => item.Subject.Name)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Subject.Start.Date)
@@ -34,7 +34,7 @@
             }
 
         </table>
-        
+
         <div class="form-group">
             @Html.LabelFor(model => model.Password, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">

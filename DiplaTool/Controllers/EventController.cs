@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using System.Windows.Forms;
 using DiplaTool.Models;
 using DiplaTool.ViewModels.Event;
 using Microsoft.AspNet.Identity;
@@ -35,11 +37,12 @@ namespace DiplaTool.Controllers
 
                 foreach (var @event in _db.Events.Where(x => x.Assignee.UserName == user.UserName).ToList())
                 {
-                    if(@event.Subject.Start.Date == today) dashboardEventViewModel.Events.Add(@event);
+                    if (@event.Subject.Start.Date == today) dashboardEventViewModel.Events.Add(@event);
                 }
 
                 dashboardEventViewModels.Add(dashboardEventViewModel);
             }
+
             return View(dashboardEventViewModels);
         }
 
@@ -66,14 +69,16 @@ namespace DiplaTool.Controllers
                         SubjectId = viewModel.SubjectId,
                         Subjects = _db.Subjects.ToList(),
                         AssigneeId = viewModel.AssigneeId,
-                        Users = _db.Users.ToList()
+                        Users = _db.Users.ToList(),
+                        Date = viewModel.Date
                     }
                 );
 
             var @event = new Event
             {
                 Subject = _db.Subjects.Find(viewModel.SubjectId),
-                Assignee = _db.Users.Find(viewModel.AssigneeId)
+                Assignee = _db.Users.Find(viewModel.AssigneeId),
+                Date = viewModel.Date
             };
 
             _db.Events.Add(@event);
@@ -100,7 +105,8 @@ namespace DiplaTool.Controllers
                     SubjectId = @event.Subject.Id,
                     Subjects = _db.Subjects.ToList(),
                     AssigneeId = @event.Assignee.Id,
-                    Users = _db.Users.ToList()
+                    Users = _db.Users.ToList(),
+                    Date = @event.Date
                 }
             );
         }
@@ -117,7 +123,8 @@ namespace DiplaTool.Controllers
                         SubjectId = viewModel.SubjectId,
                         Subjects = _db.Subjects.ToList(),
                         AssigneeId = viewModel.AssigneeId,
-                        Users = _db.Users.ToList()
+                        Users = _db.Users.ToList(),
+                        Date = viewModel.Date
                     }
                 );
 
@@ -125,6 +132,7 @@ namespace DiplaTool.Controllers
             if (@event == null) return View("Error");
             @event.Subject = _db.Subjects.Find(viewModel.SubjectId);
             @event.Assignee = _db.Users.Find(viewModel.AssigneeId);
+            @event.Date = viewModel.Date;
 
             _db.Entry(@event).State = EntityState.Modified;
             _db.SaveChanges();
@@ -188,8 +196,8 @@ namespace DiplaTool.Controllers
             {
                 new Appointment(exchangeService)
                 {
-                    Start = @event.Subject.Start,
-                    End = @event.Subject.End,
+                    Start = Convert.ToDateTime(@event.Date.Date + @event.Subject.Start.TimeOfDay),
+                    End = Convert.ToDateTime(@event.Date.Date.AddDays(@event.Subject.AddDaysToEnd()) + @event.Subject.End.TimeOfDay),
                     Body = @event.Body,
                     Subject = @event.Subject.Name,
                     LegacyFreeBusyStatus = @event.Subject.BusyStatus
