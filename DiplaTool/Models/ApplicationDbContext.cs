@@ -7,11 +7,11 @@ namespace DiplaTool.Models
     {
         public virtual DbSet<ApplicationUser> Users { get; set; }
 
+        public virtual DbSet<ApplicationRole> Roles { get; set; }
+
         public virtual DbSet<Event> Events { get; set; }
 
         public virtual DbSet<Subject> Subjects { get; set; }
-
-        public virtual DbSet<SubjectRole> SubjectRoles { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection")
@@ -30,6 +30,7 @@ namespace DiplaTool.Models
             modelBuilder.Entity<IdentityUserLogin>().HasKey<string>(l => l.UserId);
             modelBuilder.Entity<IdentityRole>().HasKey<string>(r => r.Id);
             modelBuilder.Entity<IdentityUserRole>().HasKey(r => new { r.RoleId, r.UserId });
+            modelBuilder.Entity<Subject>().HasMany(x => x.Roles).WithMany(x => x.Subjects);
         }
     }
 }

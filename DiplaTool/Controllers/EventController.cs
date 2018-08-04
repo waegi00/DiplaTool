@@ -15,12 +15,10 @@ namespace DiplaTool.Controllers
     [Authorize]
     public class EventController : Controller
     {
-        //Default context
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
-        //Context and usermanager for checking users roles with subjects roles
         private static readonly ApplicationDbContext Db = new ApplicationDbContext();
-        private readonly ApplicationUserManager _userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
+        private readonly ApplicationUserManager _manager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
 
         public ActionResult Index()
         {
@@ -69,7 +67,6 @@ namespace DiplaTool.Controllers
                 return View(
                     new FormEventViewModel
                     {
-                        Id = viewModel.Id,
                         SubjectId = viewModel.SubjectId,
                         Subjects = _db.Subjects.ToList(),
                         AssigneeId = viewModel.AssigneeId,
@@ -86,14 +83,12 @@ namespace DiplaTool.Controllers
             };
 
             //Check if any role from subject matches with any role from assignee
-            if (!_db.SubjectRoles.Where(x => x.Subjects.Select(s => s.Id).Contains(@event.Subject.Id))
-                    .Select(x => x.Name).Any(_userManager.GetRoles(@event.Assignee.Id).ToList().Contains))
+            if (!@event.Subject.Roles.Select(x => x.Name).Any(_manager.GetRoles(@event.Assignee.Id).Contains))
             {
                 ModelState.AddModelError("SubjectId", "Dieser Mitarbeiter darf diesen Dienst nicht machen.");
                 return View(
                     new FormEventViewModel
                     {
-                        Id = viewModel.Id,
                         SubjectId = viewModel.SubjectId,
                         Subjects = _db.Subjects.ToList(),
                         AssigneeId = viewModel.AssigneeId,
@@ -154,8 +149,7 @@ namespace DiplaTool.Controllers
             if (@event == null) return View("Error");
 
             //Check if any role from subject matches with any role from assignee
-            if (!_db.SubjectRoles.Where(x => x.Subjects.Select(s => s.Id).Contains(@event.Subject.Id))
-                .Select(x => x.Name).Any(_userManager.GetRoles(@event.Assignee.Id).ToList().Contains))
+            if (!@event.Subject.Roles.Select(x => x.Name).Any(_manager.GetRoles(@event.Assignee.Id).Contains))
             {
                 ModelState.AddModelError("SubjectId", "Dieser Mitarbeiter darf diesen Dienst nicht machen.");
                 return View(

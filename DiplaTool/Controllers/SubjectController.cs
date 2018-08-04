@@ -10,9 +10,8 @@ namespace DiplaTool.Controllers
     [Authorize]
     public class SubjectController : Controller
     {
-        //Default context
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
-        
+
         public ActionResult Index()
         {
             return View(_db.Subjects.OrderBy(x => x.Name).ToList());
@@ -23,7 +22,7 @@ namespace DiplaTool.Controllers
             return View(
                 new FormSubjectViewModel
                 {
-                    AllRoles = _db.SubjectRoles.ToList()
+                    AllRoles = _db.Roles.ToList()
                 }
             );
         }
@@ -44,7 +43,7 @@ namespace DiplaTool.Controllers
                         BusyStatus = viewModel.BusyStatus,
                         IsEndOnNextDay = viewModel.IsEndOnNextDay,
                         Roles = viewModel.Roles,
-                        AllRoles = _db.SubjectRoles.ToList()
+                        AllRoles = _db.Roles.ToList()
                     }
                 );
 
@@ -63,7 +62,7 @@ namespace DiplaTool.Controllers
                 Color = viewModel.Color,
                 BusyStatus = viewModel.BusyStatus,
                 IsEndOnNextDay = viewModel.IsEndOnNextDay,
-                SubjectRoles = _db.SubjectRoles.Where(x => viewModel.Roles.Contains(x.Name)).ToList()
+                Roles = _db.Roles.Where(x => viewModel.Roles.Contains(x.Name)).ToList()
             };
 
             _db.Subjects.Add(subject);
@@ -94,8 +93,8 @@ namespace DiplaTool.Controllers
                     Color = subject.Color,
                     BusyStatus = subject.BusyStatus,
                     IsEndOnNextDay = subject.IsEndOnNextDay,
-                    Roles = _db.SubjectRoles.Where(x => x.Subjects.Select(s => s.Id).Contains(subject.Id)).Select(x => x.Name).ToList(),
-                    AllRoles = _db.SubjectRoles.ToList()
+                    Roles = _db.Roles.Where(x => x.Subjects.Select(y => y.Id).Contains(subject.Id)).Select(x => x.Name).ToList(),
+                    AllRoles = _db.Roles.ToList()
                 }
             );
         }
@@ -108,6 +107,7 @@ namespace DiplaTool.Controllers
                 return View(
                     new FormSubjectViewModel
                     {
+                        Id = viewModel.Id,
                         Shortcut = viewModel.Shortcut,
                         Name = viewModel.Name,
                         Start = viewModel.Start,
@@ -116,7 +116,7 @@ namespace DiplaTool.Controllers
                         BusyStatus = viewModel.BusyStatus,
                         IsEndOnNextDay = viewModel.IsEndOnNextDay,
                         Roles = viewModel.Roles,
-                        AllRoles = _db.SubjectRoles.ToList()
+                        AllRoles = _db.Roles.ToList()
                     }
                 );
 
@@ -126,6 +126,7 @@ namespace DiplaTool.Controllers
                 return View(
                     new FormSubjectViewModel
                     {
+                        Id = viewModel.Id,
                         Shortcut = viewModel.Shortcut,
                         Name = viewModel.Name,
                         Start = viewModel.Start,
@@ -134,7 +135,7 @@ namespace DiplaTool.Controllers
                         BusyStatus = viewModel.BusyStatus,
                         IsEndOnNextDay = viewModel.IsEndOnNextDay,
                         Roles = viewModel.Roles,
-                        AllRoles = _db.SubjectRoles.ToList()
+                        AllRoles = _db.Roles.ToList()
                     }
                 );
             }
@@ -148,7 +149,8 @@ namespace DiplaTool.Controllers
             subject.Color = viewModel.Color;
             subject.BusyStatus = viewModel.BusyStatus;
             subject.IsEndOnNextDay = viewModel.IsEndOnNextDay;
-            subject.SubjectRoles = _db.SubjectRoles.Where(x => viewModel.Roles.Contains(x.Name)).ToList();
+            subject.Roles.Clear();
+            subject.Roles = _db.Roles.Where(x => viewModel.Roles.Contains(x.Name)).ToList();
 
             _db.Entry(subject).State = EntityState.Modified;
             _db.SaveChanges();

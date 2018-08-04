@@ -12,47 +12,17 @@ namespace DiplaTool.Models
     {
         protected override void Seed(ApplicationDbContext context)
         {
-            #region SubjectRoles
+            #region Roles
 
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            roleManager.Create(new IdentityRole("Admin"));
-            roleManager.Create(new IdentityRole("Internal"));
-            roleManager.Create(new IdentityRole("External"));
-            roleManager.Create(new IdentityRole("Apprentice"));
-
-            #endregion
-
-            #region SubjectRoles
-
-            var admin = new SubjectRole
-            {
-                Name = "Admin"
-            };
-
-            var @internal = new SubjectRole
-            {
-                Name = "Internal"
-            };
-
-            var external = new SubjectRole
-            {
-                Name = "External"
-            };
-
-            var apprentice = new SubjectRole
-            {
-                Name = "Apprentice"
-            };
-
-            context.SubjectRoles.Add(admin);
-            context.SubjectRoles.Add(@internal);
-            context.SubjectRoles.Add(external);
-            context.SubjectRoles.Add(apprentice);
-            context.SaveChanges();
+            var roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(context));
+            roleManager.Create(new ApplicationRole("Admin"));
+            roleManager.Create(new ApplicationRole("Internal"));
+            roleManager.Create(new ApplicationRole("External"));
+            roleManager.Create(new ApplicationRole("Apprentice"));
 
             #endregion
 
-            #region Useres
+            #region Users
 
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
 
@@ -161,7 +131,7 @@ namespace DiplaTool.Models
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.Busy,
                 Color = Color.FromArgb(255, 255, 0),
-                SubjectRoles = new List<SubjectRole> { @internal, external, apprentice }
+                Roles = new List<ApplicationRole> { roleManager.FindByName("Internal"), roleManager.FindByName("External"), roleManager.FindByName("Apprentice") }
             };
 
             var dienst2 = new Subject
@@ -173,7 +143,7 @@ namespace DiplaTool.Models
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.Busy,
                 Color = Color.FromArgb(255, 255, 0),
-                SubjectRoles = new List<SubjectRole> { @internal, external, apprentice }
+                Roles = new List<ApplicationRole> { roleManager.FindByName("Internal"), roleManager.FindByName("External"), roleManager.FindByName("Apprentice") }
             };
 
             var frei = new Subject
@@ -185,7 +155,7 @@ namespace DiplaTool.Models
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.Free,
                 Color = Color.FromArgb(50, 150, 50),
-                SubjectRoles = new List<SubjectRole> { @internal, external, apprentice }
+                Roles = new List<ApplicationRole> { roleManager.FindByName("Internal"), roleManager.FindByName("External"), roleManager.FindByName("Apprentice") }
             };
 
             var teilzeit = new Subject
@@ -197,7 +167,7 @@ namespace DiplaTool.Models
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.Free,
                 Color = Color.FromArgb(150, 150, 150),
-                SubjectRoles = new List<SubjectRole> { @internal, external }
+                Roles = new List<ApplicationRole> { roleManager.FindByName("Internal"), roleManager.FindByName("External") }
             };
 
             var homeoffice = new Subject
@@ -209,7 +179,7 @@ namespace DiplaTool.Models
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.WorkingElsewhere,
                 Color = Color.FromArgb(255, 150, 0),
-                SubjectRoles = new List<SubjectRole> { @internal, external }
+                Roles = new List<ApplicationRole> { roleManager.FindByName("Internal"), roleManager.FindByName("External") }
             };
 
             var pikett = new Subject
@@ -221,7 +191,7 @@ namespace DiplaTool.Models
                 IsEndOnNextDay = true,
                 BusyStatus = LegacyFreeBusyStatus.Busy,
                 Color = Color.FromArgb(200, 50, 50),
-                SubjectRoles = new List<SubjectRole> { @internal, external }
+                Roles = new List<ApplicationRole> { roleManager.FindByName("Internal"), roleManager.FindByName("External") }
             };
 
             var pikettAmWochenende = new Subject
@@ -233,7 +203,7 @@ namespace DiplaTool.Models
                 IsEndOnNextDay = true,
                 BusyStatus = LegacyFreeBusyStatus.Busy,
                 Color = Color.FromArgb(200, 50, 50),
-                SubjectRoles = new List<SubjectRole> { @internal, external }
+                Roles = new List<ApplicationRole> { roleManager.FindByName("Internal"), roleManager.FindByName("External") }
             };
 
             context.Subjects.Add(dienst1);
