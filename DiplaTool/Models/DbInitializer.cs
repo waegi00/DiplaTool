@@ -31,65 +31,58 @@ namespace DiplaTool.Models
             var wegmuellerlu = new ApplicationUser
             {
                 Email = "lukas.wegmueller@post.ch",
-                UserName = "lukas.wegmueller@post.ch",
                 Firstname = "Lukas",
                 Lastname = "Wegmüller",
-                LogonName = "wegmuellerlu"
+                UserName = "wegmuellerlu"
             };
 
             var cottingma = new ApplicationUser
             {
 
                 Email = "matthias.cotting@post.ch",
-                UserName = "matthias.cotting@post.ch",
                 Firstname = "Matthias",
                 Lastname = "Cotting",
-                LogonName = "cottingma"
+                UserName = "cottingma"
             };
 
             var negrip = new ApplicationUser
             {
                 Email = "patrick.negri@post.ch",
-                UserName = "patrick.negri@post.ch",
                 Firstname = "Negri",
                 Lastname = "Patrick",
-                LogonName = "negrip"
+                UserName = "negrip"
             };
 
             var hoferfr = new ApplicationUser
             {
                 Email = "frederic.hofer@post.ch",
-                UserName = "frederic.hofer@post.ch",
                 Firstname = "Frédéric",
                 Lastname = "Hofer",
-                LogonName = "hoferfr"
+                UserName = "hoferfr"
             };
 
             var kramerl = new ApplicationUser
             {
                 Email = "luca.kramer@post.ch",
-                UserName = "luca.kramer@post.ch",
                 Firstname = "Luca",
                 Lastname = "Kramer",
-                LogonName = "kramerl"
+                UserName = "kramerl"
             };
 
             var brudererclau = new ApplicationUser
             {
                 Email = "claudio.bruderer@post.ch",
-                UserName = "claudio.bruderer@post.ch",
                 Firstname = "Claudio",
                 Lastname = "Bruderer",
-                LogonName = "brudererclau"
+                UserName = "brudererclau"
             };
 
             var widmermarc = new ApplicationUser
             {
                 Email = "marc.widmer@post.ch",
-                UserName = "marc.widmer@post.ch",
                 Firstname = "Marc",
                 Lastname = "Widmer",
-                LogonName = "widmermarc"
+                UserName = "widmermarc"
             };
 
             #endregion

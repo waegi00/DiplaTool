@@ -32,7 +32,7 @@ namespace DiplaTool.Controllers
                         Id = user.Id,
                         Email = user.Email,
                         Fullname = $"{user.Firstname} {user.Lastname}",
-                        LogonName = user.LogonName,
+                        UserName = user.UserName,
                         Roles = _userManager.GetRoles(user.Id)
                     }
                 )
@@ -64,7 +64,7 @@ namespace DiplaTool.Controllers
                         Email = viewModel.Email,
                         Firstname = viewModel.Firstname,
                         Lastname = viewModel.Lastname,
-                        LogonName = viewModel.LogonName,
+                        UserName = viewModel.UserName,
                         Roles = viewModel.Roles,
                         AllRoles = _roleManager.Roles.ToList()
                     }
@@ -73,10 +73,9 @@ namespace DiplaTool.Controllers
             var applicationUser = new ApplicationUser
             {
                 Email = viewModel.Email,
-                UserName = viewModel.Email,
                 Firstname = viewModel.Firstname,
                 Lastname = viewModel.Lastname,
-                LogonName = viewModel.LogonName
+                UserName = viewModel.UserName
             };
 
             //Create user
@@ -111,7 +110,7 @@ namespace DiplaTool.Controllers
                     Email = applicationUser.Email,
                     Firstname = applicationUser.Firstname,
                     Lastname = applicationUser.Lastname,
-                    LogonName = applicationUser.LogonName,
+                    UserName = applicationUser.UserName,
                     Roles = _userManager.GetRoles(applicationUser.Id),
                     AllRoles = _roleManager.Roles.ToList()
                 }
@@ -130,7 +129,7 @@ namespace DiplaTool.Controllers
                         Email = viewModel.Email,
                         Firstname = viewModel.Firstname,
                         Lastname = viewModel.Lastname,
-                        LogonName = viewModel.LogonName,
+                        UserName = viewModel.UserName,
                         Roles = viewModel.Roles,
                         AllRoles = _roleManager.Roles.ToList()
                     }
@@ -139,10 +138,9 @@ namespace DiplaTool.Controllers
             var applicationUser = new ApplicationUser
             {
                 Email = viewModel.Email,
-                UserName = viewModel.Email,
                 Firstname = viewModel.Firstname,
                 Lastname = viewModel.Lastname,
-                LogonName = viewModel.LogonName
+                UserName = viewModel.UserName
             };
 
             //Update user

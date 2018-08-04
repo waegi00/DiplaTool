@@ -218,7 +218,6 @@
     <Compile Include="ViewModels\Event\CalendarEventViewModel.cs" />
     <Compile Include="ViewModels\Event\FormEventViewModel.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
-    <Compile Include="ViewModels\Account\RegisterViewModel.cs" />
     <Compile Include="ViewModels\Subject\FormSubjectViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +282,7 @@
     <Content Include="Views\ApplicationUser\Edit.cshtml" />
     <Content Include="Views\ApplicationUser\Index.cshtml" />
     <Content Include="Views\ApplicationUser\_Form.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

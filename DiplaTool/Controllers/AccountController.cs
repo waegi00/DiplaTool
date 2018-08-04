@@ -1,10 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using DiplaTool.Models;
 using DiplaTool.ViewModels.Account;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;  
+using Microsoft.Owin.Security;
 
 namespace DiplaTool.Controllers
 {
@@ -13,6 +18,7 @@ namespace DiplaTool.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -53,15 +59,21 @@ namespace DiplaTool.Controllers
                 return View(model);
             }
             
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            if (result == SignInStatus.Success)
+            var result = await SignInManager.PasswordSignInAsync(_db.Users.FirstOrDefault(x => x.Email == model.EmailUsername)?.UserName ?? model.EmailUsername, model.Password, model.RememberMe, shouldLockout: false);
+            switch (result)
             {
-                return RedirectToLocal(returnUrl);
+                case SignInStatus.Success:
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.RequiresVerification:
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Ungültiger Anmeldeversuch");
+                    return View(model);
             }
-            ModelState.AddModelError("", "Ungültiger Anmeldeversuch.");
-            return View(model);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
@@ -70,8 +82,28 @@ namespace DiplaTool.Controllers
             return RedirectToAction("Dashboard", "Event");
         }
 
-        #region Hilfsprogramme
-        // Wird für XSRF-Schutz beim Hinzufügen externer Anmeldungen verwendet
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_userManager != null)
+                {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
+
+                if (_signInManager != null)
+                {
+                    _signInManager.Dispose();
+                    _signInManager = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
+        #region Helpers
+        // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
         private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;

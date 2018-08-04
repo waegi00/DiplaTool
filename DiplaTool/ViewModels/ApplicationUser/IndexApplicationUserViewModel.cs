@@ -14,7 +14,7 @@ namespace DiplaTool.ViewModels.ApplicationUser
         public string Fullname { get; set; }
 
         [Display(Name = "Benutzername")]
-        public string LogonName { get; set; }
+        public string UserName { get; set; }
 
         [Display(Name = "Rollen")]
         public ICollection<string> Roles { get; set; }

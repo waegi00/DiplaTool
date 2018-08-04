@@ -17,9 +17,6 @@ namespace DiplaTool.Models
         [Display(Name = "Name")]
         public string Fullname => $"{Firstname} {Lastname}";
 
-        [Required, Display(Name = "Benutzername")]
-        public string LogonName { get; set; }
-
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Beachten Sie, dass der "authenticationType" mit dem in "CookieAuthenticationOptions.AuthenticationType" definierten Typ übereinstimmen muss.

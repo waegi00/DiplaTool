@@ -4,8 +4,8 @@ namespace DiplaTool.ViewModels.Account
 {
     public class LoginViewModel
     {
-        [Required, EmailAddress, Display(Name = "E-Mail")]
-        public string Email { get; set; }
+        [Required, Display(Name = "E-Mail / Benutzername")]
+        public string EmailUsername { get; set; }
 
         [Required, DataType(DataType.Password), Display(Name = "Passwort")]
         public string Password { get; set; }

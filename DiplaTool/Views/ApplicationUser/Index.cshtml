@@ -19,7 +19,7 @@
             @Html.DisplayNameFor(model => model.Fullname)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.LogonName)
+            @Html.DisplayNameFor(model => model.UserName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Roles)
@@ -37,7 +37,7 @@
                 @Html.DisplayFor(modelItem => item.Fullname)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LogonName)
+                @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
                 @foreach (var role in item.Roles)
