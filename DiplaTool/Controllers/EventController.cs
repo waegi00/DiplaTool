@@ -35,7 +35,7 @@ namespace DiplaTool.Controllers
 
                 foreach (var @event in _db.Events.Where(x => x.Assignee.UserName == user.UserName).ToList())
                 {
-                    if (@event.Subject.Start.Date == today) dashboardEventViewModel.Events.Add(@event);
+                    if (@event.Date == today) dashboardEventViewModel.Events.Add(@event);
                 }
 
                 dashboardEventViewModels.Add(dashboardEventViewModel);

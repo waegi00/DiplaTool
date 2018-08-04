@@ -28,11 +28,15 @@ namespace DiplaTool.Models
 
             var wegmuellerlu = new ApplicationUser
             {
-                Email = "lukas00@bluewin.ch",
-                UserName = "lukas00@bluewin.ch"
+                Email = "lukas.wegmueller@outlook.com",
+                UserName = "lukas.wegmueller@outlook.com",
+                Firstname = "Lukas",
+                Lastname = "Wegmüller",
+                LogonName = "wegmuellerlu"
             };
 
             manager.Create(wegmuellerlu, "Welcome$18");
+            manager.AddToRole(wegmuellerlu.Id, "Admin");
 
             #endregion
 
@@ -104,12 +108,86 @@ namespace DiplaTool.Models
                 Color = Color.FromArgb(200, 50, 50)
             };
 
+            var pikettAmWochenende = new Subject
+            {
+                Shortcut = "PI",
+                Name = "Pikett am Wochenende",
+                Start = Convert.ToDateTime("07:30"),
+                End = Convert.ToDateTime("07:30"),
+                IsEndOnNextDay = true,
+                BusyStatus = LegacyFreeBusyStatus.Busy,
+                Color = Color.FromArgb(200, 50, 50)
+            };
+
             context.Subjects.Add(dienst1);
             context.Subjects.Add(dienst2);
             context.Subjects.Add(frei);
             context.Subjects.Add(teilzeit);
             context.Subjects.Add(homeoffice);
             context.Subjects.Add(pikett);
+            context.Subjects.Add(pikettAmWochenende);
+            context.SaveChanges();
+
+            #endregion
+
+            #region Events
+
+            var montag = new Event
+            {
+                Assignee = wegmuellerlu,
+                Subject = pikett,
+                Date = new DateTime(2018, 07, 30)
+            };
+
+            var dienstag = new Event
+            {
+                Assignee = wegmuellerlu,
+                Subject = pikett,
+                Date = new DateTime(2018, 07, 31)
+            };
+
+            var mittwoch = new Event
+            {
+                Assignee = wegmuellerlu,
+                Subject = pikett,
+                Date = new DateTime(2018, 08, 01)
+            };
+
+            var donnerstag = new Event
+            {
+                Assignee = wegmuellerlu,
+                Subject = pikett,
+                Date = new DateTime(2018, 08, 02)
+            };
+
+            var freitag = new Event
+            {
+                Assignee = wegmuellerlu,
+                Subject = pikett,
+                Date = new DateTime(2018, 08, 03)
+            };
+
+            var samstag = new Event
+            {
+                Assignee = wegmuellerlu,
+                Subject = pikettAmWochenende,
+                Date = new DateTime(2018, 08, 04)
+            };
+
+            var sonntag = new Event
+            {
+                Assignee = wegmuellerlu,
+                Subject = pikettAmWochenende,
+                Date = new DateTime(2018, 08, 05)
+            };
+
+            context.Events.Add(montag);
+            context.Events.Add(dienstag);
+            context.Events.Add(mittwoch);
+            context.Events.Add(donnerstag);
+            context.Events.Add(freitag);
+            context.Events.Add(samstag);
+            context.Events.Add(sonntag);
             context.SaveChanges();
 
             #endregion

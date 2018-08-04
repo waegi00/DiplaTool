@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using DiplaTool.Models;
 using DiplaTool.ViewModels.Account;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -60,31 +59,6 @@ namespace DiplaTool.Controllers
                 return RedirectToLocal(returnUrl);
             }
             ModelState.AddModelError("", "Ungültiger Anmeldeversuch.");
-            return View(model);
-        }
-        
-        [AllowAnonymous]
-        public ActionResult Register()
-        {
-            return View();
-        }
-        
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
-        {
-            if (!ModelState.IsValid) return View(model);
-            var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
-            var result = await UserManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-            {
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                
-                return RedirectToAction("Dashboard", "Event");
-            }
-            AddErrors(result);
-            
             return View(model);
         }
         
