@@ -55,3 +55,11 @@
         @Html.ValidationMessageFor(model => model.BusyStatus, "", new { @class = "text-danger" })
     </div>
 </div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.Roles, new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.ListBoxFor(model => model.Roles, new MultiSelectList(Model.AllRoles, "Name", "Name"), new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
+    </div>
+</div>

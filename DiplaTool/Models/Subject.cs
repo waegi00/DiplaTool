@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Exchange.WebServices.Data;
-using Newtonsoft.Json;
 
 namespace DiplaTool.Models
 {
@@ -53,6 +53,9 @@ namespace DiplaTool.Models
         {
             return $"#{_myColor.R:X2}{_myColor.G:X2}{_myColor.B:X2}";
         }
+
+        [Required]
+        public ICollection<string> Roles { get; set; }
 
         public virtual ICollection<Event> Events { get; set; }
     }

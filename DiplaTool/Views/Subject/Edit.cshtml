@@ -30,3 +30,13 @@
 <div>
     @Html.ActionLink("Zurück zur Liste", "Index")
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $("#Roles").chosen();
+        });
+    </script>
+}

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DiplaTool.Models.ApplicationUser>
+﻿@model IEnumerable<DiplaTool.ViewModels.ApplicationUser.IndexApplicationUserViewModel>
 
 @{
     ViewBag.Title = "Benutzerliste";
@@ -42,7 +42,11 @@
             <td>
                 @foreach (var role in item.Roles)
                 {
-                    @Html.DisplayFor(modelItem => role.ToString())
+                    @Html.DisplayFor(roleItem => role)
+                    if (role != item.Roles.Last())
+                    {
+                        @Html.DisplayName(", ")
+                    }
                 }
             </td>
             <td>

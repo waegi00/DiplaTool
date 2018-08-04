@@ -26,17 +26,97 @@ namespace DiplaTool.Models
 
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
 
+            #region Instance users
+
             var wegmuellerlu = new ApplicationUser
             {
-                Email = "lukas.wegmueller@outlook.com",
-                UserName = "lukas.wegmueller@outlook.com",
+                Email = "lukas.wegmueller@post.ch",
+                UserName = "lukas.wegmueller@post.ch",
                 Firstname = "Lukas",
                 Lastname = "Wegmüller",
                 LogonName = "wegmuellerlu"
             };
 
-            manager.Create(wegmuellerlu, "Welcome$18");
-            manager.AddToRole(wegmuellerlu.Id, "Admin");
+            var cottingma = new ApplicationUser
+            {
+
+                Email = "matthias.cotting@post.ch",
+                UserName = "matthias.cotting@post.ch",
+                Firstname = "Matthias",
+                Lastname = "Cotting",
+                LogonName = "cottingma"
+            };
+
+            var negrip = new ApplicationUser
+            {
+                Email = "patrick.negri@post.ch",
+                UserName = "patrick.negri@post.ch",
+                Firstname = "Negri",
+                Lastname = "Patrick",
+                LogonName = "negrip"
+            };
+
+            var hoferfr = new ApplicationUser
+            {
+                Email = "frederic.hofer@post.ch",
+                UserName = "frederic.hofer@post.ch",
+                Firstname = "Frédéric",
+                Lastname = "Hofer",
+                LogonName = "hoferfr"
+            };
+
+            var kramerl = new ApplicationUser
+            {
+                Email = "luca.kramer@post.ch",
+                UserName = "luca.kramer@post.ch",
+                Firstname = "Luca",
+                Lastname = "Kramer",
+                LogonName = "kramerl"
+            };
+
+            var brudererclau = new ApplicationUser
+            {
+                Email = "claudio.bruderer@post.ch",
+                UserName = "claudio.bruderer@post.ch",
+                Firstname = "Claudio",
+                Lastname = "Bruderer",
+                LogonName = "brudererclau"
+            };
+
+            var widmermarc = new ApplicationUser
+            {
+                Email = "marc.widmer@post.ch",
+                UserName = "marc.widmer@post.ch",
+                Firstname = "Marc",
+                Lastname = "Widmer",
+                LogonName = "widmermarc"
+            };
+
+            #endregion
+
+            #region Create users
+
+            manager.Create(wegmuellerlu, "Welcome$2018");
+            manager.Create(cottingma, "Welcome$2018");
+            manager.Create(negrip, "Welcome$2018");
+            manager.Create(hoferfr, "Welcome$2018");
+            manager.Create(kramerl, "Welcome$2018");
+            manager.Create(brudererclau, "Welcome$2018");
+            manager.Create(widmermarc, "Welcome$2018");
+
+            #endregion
+
+            #region Add roles to users
+
+            manager.AddToRoles(wegmuellerlu.Id, new string[] { "Apprentice" });
+            manager.AddToRoles(cottingma.Id, new string[] { "Apprentice" });
+            manager.AddToRoles(negrip.Id, new string[] { "Admin", "Internal" });
+            manager.AddToRoles(hoferfr.Id, new string[] { "Admin", "Internal" });
+            manager.AddToRoles(kramerl.Id, new string[] { "Internal" });
+            manager.AddToRoles(brudererclau.Id, new string[] { "External" });
+            manager.AddToRoles(widmermarc.Id, new string[] { "External" });
+
+            #endregion
 
             #endregion
 

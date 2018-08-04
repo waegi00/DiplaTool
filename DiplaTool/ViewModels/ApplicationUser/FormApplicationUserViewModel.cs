@@ -7,7 +7,7 @@ namespace DiplaTool.ViewModels.ApplicationUser
 {
     public class FormApplicationUserViewModel
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required, DataType(DataType.EmailAddress), Display(Name = "E-Mail")]
         public string Email { get; set; }

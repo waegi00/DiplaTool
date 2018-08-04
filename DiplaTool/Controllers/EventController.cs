@@ -6,7 +6,9 @@ using System.Net;
 using System.Web.Mvc;
 using DiplaTool.Models;
 using DiplaTool.ViewModels.Event;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Exchange.WebServices.Data;
 
 namespace DiplaTool.Controllers
@@ -14,8 +16,13 @@ namespace DiplaTool.Controllers
     [Authorize]
     public class EventController : Controller
     {
+        //Default context
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
-        
+
+        //Context and usermanager for checking users roles with subjects roles
+        private static readonly ApplicationDbContext Db = new ApplicationDbContext();
+        private readonly ApplicationUserManager _userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
+
         public ActionResult Index()
         {
             return View(_db.Events.OrderBy(x => x.Date).ThenBy(x => x.Subject.Start).ToList());
@@ -79,6 +86,20 @@ namespace DiplaTool.Controllers
                 Date = viewModel.Date
             };
 
+            //Check if any role from subject matches with any role from assignee
+            if (!@event.Subject.Roles.Intersect(_userManager.GetRoles(@event.Assignee.Id)).Any())
+                return View(
+                    new FormEventViewModel
+                    {
+                        Id = viewModel.Id,
+                        SubjectId = viewModel.SubjectId,
+                        Subjects = _db.Subjects.ToList(),
+                        AssigneeId = viewModel.AssigneeId,
+                        Users = _db.Users.ToList(),
+                        Date = viewModel.Date
+                    }
+                );
+
             _db.Events.Add(@event);
             _db.SaveChanges();
             return RedirectToAction("Index");
@@ -128,6 +149,21 @@ namespace DiplaTool.Controllers
 
             var @event = _db.Events.Find(viewModel.Id);
             if (@event == null) return View("Error");
+            
+            //Check if any role from subject matches with any role from assignee
+            if (!@event.Subject.Roles.Intersect(_userManager.GetRoles(@event.Assignee.Id)).Any())
+                return View(
+                    new FormEventViewModel
+                    {
+                        Id = viewModel.Id,
+                        SubjectId = viewModel.SubjectId,
+                        Subjects = _db.Subjects.ToList(),
+                        AssigneeId = viewModel.AssigneeId,
+                        Users = _db.Users.ToList(),
+                        Date = viewModel.Date
+                    }
+                );
+
             @event.Subject = _db.Subjects.Find(viewModel.SubjectId);
             @event.Assignee = _db.Users.Find(viewModel.AssigneeId);
             @event.Date = viewModel.Date;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -19,12 +20,28 @@ namespace DiplaTool.Controllers
         private static readonly ApplicationDbContext Db = new ApplicationDbContext();
         private readonly ApplicationUserManager _userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
         private readonly RoleManager<IdentityRole> _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(Db));
-
+        
         public ActionResult Index()
         {
-            return View(_userManager.Users.ToList());
+            var users = new List<IndexApplicationUserViewModel>();
+
+            _userManager.Users.ToList().ForEach(user =>
+                users.Add(
+                    new IndexApplicationUserViewModel()
+                    {
+                        Id = user.Id,
+                        Email = user.Email,
+                        Fullname = $"{user.Firstname} {user.Lastname}",
+                        LogonName = user.LogonName,
+                        Roles = _userManager.GetRoles(user.Id)
+                    }
+                )
+            );
+
+            return View(users);
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View(
@@ -35,6 +52,7 @@ namespace DiplaTool.Controllers
             );
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(FormApplicationUserViewModel viewModel)
@@ -43,7 +61,6 @@ namespace DiplaTool.Controllers
                 return View(
                     new FormApplicationUserViewModel
                     {
-                        Id = viewModel.Id,
                         Email = viewModel.Email,
                         Firstname = viewModel.Firstname,
                         Lastname = viewModel.Lastname,
@@ -75,6 +92,7 @@ namespace DiplaTool.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(string id)
         {
             if (id == null)
@@ -87,18 +105,20 @@ namespace DiplaTool.Controllers
                 return HttpNotFound();
             }
             return View(
-                new FormApplicationUserViewModel()
+                new FormApplicationUserViewModel
                 {
+                    Id = new Guid(),
                     Email = applicationUser.Email,
                     Firstname = applicationUser.Firstname,
                     Lastname = applicationUser.Lastname,
                     LogonName = applicationUser.LogonName,
-                    Roles = _roleManager.Roles.Where(x => x.Users.Any(y => y.UserId == applicationUser.Id)).Select(x => x.Name).ToList(),
+                    Roles = _userManager.GetRoles(applicationUser.Id),
                     AllRoles = _roleManager.Roles.ToList()
                 }
             );
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(FormApplicationUserViewModel viewModel)
@@ -107,7 +127,6 @@ namespace DiplaTool.Controllers
                 return View(
                     new FormApplicationUserViewModel
                     {
-                        Id = viewModel.Id,
                         Email = viewModel.Email,
                         Firstname = viewModel.Firstname,
                         Lastname = viewModel.Lastname,
@@ -130,17 +149,18 @@ namespace DiplaTool.Controllers
             _userManager.Update(applicationUser);
 
             //Remove from all roles
-            _userManager.RemoveFromRoles(applicationUser.Id, _userManager.GetRoles(applicationUser.Id).ToArray());
+            _userManager.RemoveFromRoles(_userManager.FindByEmail(applicationUser.Email).Id, _userManager.GetRoles(_userManager.FindByEmail(applicationUser.Email).Id).ToArray());
 
             //Add selected roles
             foreach (var role in viewModel.Roles)
             {
-                _userManager.AddToRoles(applicationUser.Id, role);
+                _userManager.AddToRoles(_userManager.FindByEmail(applicationUser.Email).Id, role);
             }
 
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(string id)
         {
             if (id == null)
@@ -155,13 +175,14 @@ namespace DiplaTool.Controllers
             return View(applicationUser);
         }
 
-        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
             var applicationUser = _userManager.FindById(id);
             if (applicationUser == null) return View("Error");
-            _userManager.RemoveLogin(applicationUser.Id,new UserLoginInfo("Wadu", "heck"));
+            _userManager.Delete(applicationUser);
             return RedirectToAction("Index");
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Exchange.WebServices.Data;
 
 namespace DiplaTool.ViewModels.Subject
@@ -40,5 +41,10 @@ namespace DiplaTool.ViewModels.Subject
 
         [Required, Display(Name = "Farbe")]
         public Color Color { get; set; }
+
+        [Required, Display(Name = "Rollen")]
+        public ICollection<string> Roles { get; set; }
+
+        public ICollection<IdentityRole> AllRoles { get; set; } = new List<IdentityRole>();
     }
 }
