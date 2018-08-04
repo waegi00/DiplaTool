@@ -6,7 +6,6 @@ using System.Net;
 using System.Web.Mvc;
 using DiplaTool.Models;
 using DiplaTool.ViewModels.Event;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Exchange.WebServices.Data;
@@ -87,7 +86,10 @@ namespace DiplaTool.Controllers
             };
 
             //Check if any role from subject matches with any role from assignee
-            if (!@event.Subject.Roles.Intersect(_userManager.GetRoles(@event.Assignee.Id)).Any())
+            if (!_db.SubjectRoles.Where(x => x.Subjects.Select(s => s.Id).Contains(@event.Subject.Id))
+                    .Select(x => x.Name).Any(_userManager.GetRoles(@event.Assignee.Id).ToList().Contains))
+            {
+                ModelState.AddModelError("SubjectId", "Dieser Mitarbeiter darf diesen Dienst nicht machen.");
                 return View(
                     new FormEventViewModel
                     {
@@ -99,6 +101,7 @@ namespace DiplaTool.Controllers
                         Date = viewModel.Date
                     }
                 );
+            }
 
             _db.Events.Add(@event);
             _db.SaveChanges();
@@ -149,9 +152,12 @@ namespace DiplaTool.Controllers
 
             var @event = _db.Events.Find(viewModel.Id);
             if (@event == null) return View("Error");
-            
+
             //Check if any role from subject matches with any role from assignee
-            if (!@event.Subject.Roles.Intersect(_userManager.GetRoles(@event.Assignee.Id)).Any())
+            if (!_db.SubjectRoles.Where(x => x.Subjects.Select(s => s.Id).Contains(@event.Subject.Id))
+                .Select(x => x.Name).Any(_userManager.GetRoles(@event.Assignee.Id).ToList().Contains))
+            {
+                ModelState.AddModelError("SubjectId", "Dieser Mitarbeiter darf diesen Dienst nicht machen.");
                 return View(
                     new FormEventViewModel
                     {
@@ -163,6 +169,7 @@ namespace DiplaTool.Controllers
                         Date = viewModel.Date
                     }
                 );
+            }
 
             @event.Subject = _db.Subjects.Find(viewModel.SubjectId);
             @event.Assignee = _db.Users.Find(viewModel.AssigneeId);

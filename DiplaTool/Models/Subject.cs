@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
-using Microsoft.AspNet.Identity.EntityFramework;
+using System.Linq;
 using Microsoft.Exchange.WebServices.Data;
 
 namespace DiplaTool.Models
@@ -55,7 +55,7 @@ namespace DiplaTool.Models
         }
 
         [Required]
-        public ICollection<string> Roles { get; set; }
+        public ICollection<SubjectRole> SubjectRoles { get; set; }
 
         public virtual ICollection<Event> Events { get; set; }
     }

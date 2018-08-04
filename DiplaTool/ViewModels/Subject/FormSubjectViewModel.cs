@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
-using Microsoft.AspNet.Identity.EntityFramework;
+using DiplaTool.Models;
 using Microsoft.Exchange.WebServices.Data;
 
 namespace DiplaTool.ViewModels.Subject
@@ -45,6 +45,6 @@ namespace DiplaTool.ViewModels.Subject
         [Required, Display(Name = "Rollen")]
         public ICollection<string> Roles { get; set; }
 
-        public ICollection<IdentityRole> AllRoles { get; set; } = new List<IdentityRole>();
+        public ICollection<SubjectRole> AllRoles { get; set; } = new List<SubjectRole>();
     }
 }

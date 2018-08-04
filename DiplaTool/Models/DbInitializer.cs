@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Drawing;
-using DiplaTool.Controllers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Exchange.WebServices.Data;
@@ -12,13 +12,43 @@ namespace DiplaTool.Models
     {
         protected override void Seed(ApplicationDbContext context)
         {
-            #region Roles
+            #region SubjectRoles
 
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             roleManager.Create(new IdentityRole("Admin"));
             roleManager.Create(new IdentityRole("Internal"));
             roleManager.Create(new IdentityRole("External"));
             roleManager.Create(new IdentityRole("Apprentice"));
+
+            #endregion
+
+            #region SubjectRoles
+
+            var admin = new SubjectRole
+            {
+                Name = "Admin"
+            };
+
+            var @internal = new SubjectRole
+            {
+                Name = "Internal"
+            };
+
+            var external = new SubjectRole
+            {
+                Name = "External"
+            };
+
+            var apprentice = new SubjectRole
+            {
+                Name = "Apprentice"
+            };
+
+            context.SubjectRoles.Add(admin);
+            context.SubjectRoles.Add(@internal);
+            context.SubjectRoles.Add(external);
+            context.SubjectRoles.Add(apprentice);
+            context.SaveChanges();
 
             #endregion
 
@@ -130,7 +160,8 @@ namespace DiplaTool.Models
                 End = Convert.ToDateTime("12:15"),
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.Busy,
-                Color = Color.FromArgb(255, 255, 0)
+                Color = Color.FromArgb(255, 255, 0),
+                SubjectRoles = new List<SubjectRole> { @internal, external, apprentice }
             };
 
             var dienst2 = new Subject
@@ -141,7 +172,8 @@ namespace DiplaTool.Models
                 End = Convert.ToDateTime("17:00"),
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.Busy,
-                Color = Color.FromArgb(255, 255, 0)
+                Color = Color.FromArgb(255, 255, 0),
+                SubjectRoles = new List<SubjectRole> { @internal, external, apprentice }
             };
 
             var frei = new Subject
@@ -152,7 +184,8 @@ namespace DiplaTool.Models
                 End = Convert.ToDateTime("17:00"),
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.Free,
-                Color = Color.FromArgb(50, 150, 50)
+                Color = Color.FromArgb(50, 150, 50),
+                SubjectRoles = new List<SubjectRole> { @internal, external, apprentice }
             };
 
             var teilzeit = new Subject
@@ -163,7 +196,8 @@ namespace DiplaTool.Models
                 End = Convert.ToDateTime("17:00"),
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.Free,
-                Color = Color.FromArgb(150, 150, 150)
+                Color = Color.FromArgb(150, 150, 150),
+                SubjectRoles = new List<SubjectRole> { @internal, external }
             };
 
             var homeoffice = new Subject
@@ -174,7 +208,8 @@ namespace DiplaTool.Models
                 End = Convert.ToDateTime("17:00"),
                 IsEndOnNextDay = false,
                 BusyStatus = LegacyFreeBusyStatus.WorkingElsewhere,
-                Color = Color.FromArgb(255, 150, 0)
+                Color = Color.FromArgb(255, 150, 0),
+                SubjectRoles = new List<SubjectRole> { @internal, external }
             };
 
             var pikett = new Subject
@@ -185,7 +220,8 @@ namespace DiplaTool.Models
                 End = Convert.ToDateTime("07:30"),
                 IsEndOnNextDay = true,
                 BusyStatus = LegacyFreeBusyStatus.Busy,
-                Color = Color.FromArgb(200, 50, 50)
+                Color = Color.FromArgb(200, 50, 50),
+                SubjectRoles = new List<SubjectRole> { @internal, external }
             };
 
             var pikettAmWochenende = new Subject
@@ -196,7 +232,8 @@ namespace DiplaTool.Models
                 End = Convert.ToDateTime("07:30"),
                 IsEndOnNextDay = true,
                 BusyStatus = LegacyFreeBusyStatus.Busy,
-                Color = Color.FromArgb(200, 50, 50)
+                Color = Color.FromArgb(200, 50, 50),
+                SubjectRoles = new List<SubjectRole> { @internal, external }
             };
 
             context.Subjects.Add(dienst1);
@@ -206,68 +243,6 @@ namespace DiplaTool.Models
             context.Subjects.Add(homeoffice);
             context.Subjects.Add(pikett);
             context.Subjects.Add(pikettAmWochenende);
-            context.SaveChanges();
-
-            #endregion
-
-            #region Events
-
-            var montag = new Event
-            {
-                Assignee = wegmuellerlu,
-                Subject = pikett,
-                Date = new DateTime(2018, 07, 30)
-            };
-
-            var dienstag = new Event
-            {
-                Assignee = wegmuellerlu,
-                Subject = pikett,
-                Date = new DateTime(2018, 07, 31)
-            };
-
-            var mittwoch = new Event
-            {
-                Assignee = wegmuellerlu,
-                Subject = pikett,
-                Date = new DateTime(2018, 08, 01)
-            };
-
-            var donnerstag = new Event
-            {
-                Assignee = wegmuellerlu,
-                Subject = pikett,
-                Date = new DateTime(2018, 08, 02)
-            };
-
-            var freitag = new Event
-            {
-                Assignee = wegmuellerlu,
-                Subject = pikett,
-                Date = new DateTime(2018, 08, 03)
-            };
-
-            var samstag = new Event
-            {
-                Assignee = wegmuellerlu,
-                Subject = pikettAmWochenende,
-                Date = new DateTime(2018, 08, 04)
-            };
-
-            var sonntag = new Event
-            {
-                Assignee = wegmuellerlu,
-                Subject = pikettAmWochenende,
-                Date = new DateTime(2018, 08, 05)
-            };
-
-            context.Events.Add(montag);
-            context.Events.Add(dienstag);
-            context.Events.Add(mittwoch);
-            context.Events.Add(donnerstag);
-            context.Events.Add(freitag);
-            context.Events.Add(samstag);
-            context.Events.Add(sonntag);
             context.SaveChanges();
 
             #endregion

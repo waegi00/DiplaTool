@@ -11,6 +11,8 @@ namespace DiplaTool.Models
 
         public virtual DbSet<Subject> Subjects { get; set; }
 
+        public virtual DbSet<SubjectRole> SubjectRoles { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection")
         {
