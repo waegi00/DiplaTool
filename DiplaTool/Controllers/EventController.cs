@@ -27,8 +27,10 @@ namespace DiplaTool.Controllers
 
         public ActionResult Dashboard()
         {
+            //Used to show the amount of days on the dashboard
+            var dashboardLength = 7;
+
             var dashboardEventViewModels = new List<DashboardEventViewModel>();
-            var today = DateTime.Today.Date;
 
             foreach (var user in _db.Users.ToList())
             {
@@ -37,9 +39,13 @@ namespace DiplaTool.Controllers
                     UserName = user.UserName
                 };
 
-                foreach (var @event in _db.Events.Where(x => x.Assignee.UserName == user.UserName).ToList())
+                for (var i = 0; i < dashboardLength; i++)
                 {
-                    if (@event.Date == today) dashboardEventViewModel.Events.Add(@event);
+                    var date = DateTime.Today.AddDays(i);
+                    dashboardEventViewModel.Events.Add(date,
+                        _db.Events.Any(x => x.Assignee.UserName == user.UserName && x.Date == date)
+                            ? _db.Events.Where(x => x.Assignee.UserName == user.UserName && x.Date == date).ToList()
+                            : null);
                 }
 
                 dashboardEventViewModels.Add(dashboardEventViewModel);

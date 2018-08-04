@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using DiplaTool.Models;
 using DiplaTool.ViewModels.ApplicationUser;
@@ -20,7 +22,7 @@ namespace DiplaTool.Controllers
         private static readonly ApplicationDbContext Db = new ApplicationDbContext();
         private readonly ApplicationUserManager _userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
         private readonly RoleManager<IdentityRole> _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(Db));
-        
+
         public ActionResult Index()
         {
             var users = new List<IndexApplicationUserViewModel>();
@@ -106,7 +108,7 @@ namespace DiplaTool.Controllers
             return View(
                 new FormApplicationUserViewModel
                 {
-                    Id = new Guid(),
+                    Id = id,
                     Email = applicationUser.Email,
                     Firstname = applicationUser.Firstname,
                     Lastname = applicationUser.Lastname,
@@ -120,12 +122,13 @@ namespace DiplaTool.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(FormApplicationUserViewModel viewModel)
+        public async Task<ActionResult> Edit(FormApplicationUserViewModel viewModel)
         {
             if (!ModelState.IsValid)
                 return View(
                     new FormApplicationUserViewModel
                     {
+                        Id = viewModel.Id,
                         Email = viewModel.Email,
                         Firstname = viewModel.Firstname,
                         Lastname = viewModel.Lastname,
@@ -135,24 +138,25 @@ namespace DiplaTool.Controllers
                     }
                 );
 
-            var applicationUser = new ApplicationUser
-            {
-                Email = viewModel.Email,
-                Firstname = viewModel.Firstname,
-                Lastname = viewModel.Lastname,
-                UserName = viewModel.UserName
-            };
+            //Edit user
+            var applicationUser = _userManager.FindById(viewModel.Id);
+            if (applicationUser == null) return View("Error");
+            applicationUser.Email = viewModel.Email;
+            applicationUser.Firstname = viewModel.Firstname;
+            applicationUser.Lastname = viewModel.Lastname;
+            applicationUser.UserName = viewModel.UserName;
 
-            //Update user
-            _userManager.Update(applicationUser);
+            //Save user in usermanager context (Db)
+            await _userManager.UpdateAsync(applicationUser);
+            Db.SaveChanges();
 
             //Remove from all roles
-            _userManager.RemoveFromRoles(_userManager.FindByEmail(applicationUser.Email).Id, _userManager.GetRoles(_userManager.FindByEmail(applicationUser.Email).Id).ToArray());
+            _userManager.RemoveFromRoles(viewModel.Id, _userManager.GetRoles(_userManager.FindByEmail(applicationUser.Email).Id).ToArray());
 
             //Add selected roles
             foreach (var role in viewModel.Roles)
             {
-                _userManager.AddToRoles(_userManager.FindByEmail(applicationUser.Email).Id, role);
+                _userManager.AddToRoles(viewModel.Id, role);
             }
 
             return RedirectToAction("Index");

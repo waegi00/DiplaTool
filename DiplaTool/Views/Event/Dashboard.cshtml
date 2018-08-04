@@ -11,9 +11,10 @@
         <th>
             @Html.DisplayNameFor(model => model.ElementAt(0).UserName)
         </th>
-        <th>
-            @DateTime.Today.ToString("dd.MM.yyyy")
-        </th>
+        @foreach (var key in Model.ElementAt(0).Events.Keys)
+        {
+            <th>@key.ToString("dd.MM.yyyy")</th>
+        }
     </tr>
 
     @foreach (var item in Model)
@@ -23,20 +24,23 @@
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
 
-            @if (item.Events.Any())
+            @foreach (var value in item.Events.Values)
             {
-                <td style="background-color: @item.Events.ElementAt(0).Subject.ColorToString()">
-                    @foreach (var @event in item.Events)
-                    {
-                        @Html.DisplayFor(modelItem => @event.Subject.Shortcut)
-                    }
-                </td>
-            }
-            else
-            {
-                <td>
-                    @Html.DisplayName("-")
-                </td>
+                if (value != null)
+                {
+                    <td style="background-color: @value.ElementAt(0).Subject.ColorToString()">
+                        @foreach (var @event in value)
+                        {
+                            @Html.DisplayFor(modelItem => @event.Subject.Shortcut)
+                        }
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayName("-")
+                    </td>
+                }
             }
         </tr>
     }
