@@ -236,6 +236,15 @@ namespace DiplaTool.Controllers
                 return View(new CalendarEventViewModel { Events = _db.Events.Where(x => x.Assignee.Id == userId).ToList() });
             }
 
+            var coll = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
+            {
+                new SearchFilter.ContainsSubstring(ItemSchema.Body, new Event().Body),
+                new SearchFilter.IsGreaterThanOrEqualTo(AppointmentSchema.Start, new DateTime(DateTime.Today.Year, 1, 1))
+            };
+
+            var appointments = exchangeService.FindItems(WellKnownFolderName.Calendar, coll, new ItemView(10)).Select(x => x.Id).ToList();
+            if(appointments.Any()) exchangeService.DeleteItems(appointments, DeleteMode.MoveToDeletedItems, SendCancellationsMode.SendToAllAndSaveCopy, AffectedTaskOccurrence.AllOccurrences);
+
             foreach (var @event in _db.Events.Where(x => x.Assignee.Id == userId).ToList())
             {
                 new Appointment(exchangeService)
