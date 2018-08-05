@@ -12,5 +12,16 @@ namespace DiplaTool.ViewModels.Event
         public string UserName { get; set; }
 
         public Dictionary<DateTime, ICollection<Models.Event>> Events { get; set; } = new Dictionary<DateTime, ICollection<Models.Event>>();
+
+        [Display(Name = "Dienstcheck")]
+        public ICollection<bool> DienstChecks { get; set; } = new List<bool>();
+
+        [Display(Name = "Pikettcheck")]
+        public ICollection<bool> PikettChecks { get; set; } =  new List<bool>();
+
+        public string GetColor(bool value)
+        {
+            return value ? "#00FF00" : "#FF0000";
+        }
     }
 }

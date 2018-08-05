@@ -47,6 +47,8 @@ namespace DiplaTool.Controllers
                         _db.Events.Any(x => x.Assignee.UserName == user.UserName && x.Date == date)
                             ? _db.Events.Where(x => x.Assignee.UserName == user.UserName && x.Date == date).ToList()
                             : null);
+                    dashboardEventViewModel.DienstChecks.Add(_db.Events.Where(x => x.Date == date).Select(x => x.Subject.Name).Intersect(new List<string> { "Dienst 1", "Dienst 2" }).Count() == new List<string> { "Dienst 1", "Dienst 2" }.Count);
+                    dashboardEventViewModel.PikettChecks.Add(_db.Events.Where(x => x.Date == date).Select(x => x.Subject.Name).Any(new string[] { "Pikett", "Pikett am Wochenende" }.Contains));
                 }
 
                 dashboardEventViewModels.Add(dashboardEventViewModel);
