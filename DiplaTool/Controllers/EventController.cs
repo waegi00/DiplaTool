@@ -31,30 +31,30 @@ namespace DiplaTool.Controllers
             var start = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
             var end = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
 
-            var dashboardEventViewModels = new List<DashboardEventViewModel>();
+            var dashboardEventViewModel = new DashboardEventViewModel();
 
             foreach (var user in _db.Users.ToList())
             {
-                var dashboardEventViewModel = new DashboardEventViewModel
-                {
-                    UserName = user.UserName
-                };
+                var events = new Dictionary<DateTime, ICollection<Event>>();
 
                 for (var i = 0; i < (end - start).TotalDays; i++)
                 {
                     var date = start.AddDays(i);
-                    dashboardEventViewModel.Events.Add(date,
+                    events.Add(date,
                         _db.Events.Any(x => x.Assignee.UserName == user.UserName && x.Date == date)
                             ? _db.Events.Where(x => x.Assignee.UserName == user.UserName && x.Date == date).ToList()
                             : null);
-                    dashboardEventViewModel.DienstChecks.Add(_db.Events.Where(x => x.Date == date).Select(x => x.Subject.Name).Intersect(new List<string> { "Dienst 1", "Dienst 2" }).Count() == new List<string> { "Dienst 1", "Dienst 2" }.Count);
-                    dashboardEventViewModel.PikettChecks.Add(_db.Events.Where(x => x.Date == date).Select(x => x.Subject.Name).Any(new string[] { "Pikett", "Pikett am Wochenende" }.Contains));
+                    if (!(dashboardEventViewModel.DienstChecks.Count < (end - start).TotalDays)) continue;
+                    {
+                        dashboardEventViewModel.DienstChecks.Add(_db.Events.Where(x => x.Date == date).Select(x => x.Subject.Name).Intersect(new List<string> { "Dienst 1", "Dienst 2" }).Count() == new List<string> { "Dienst 1", "Dienst 2" }.Count);
+                        dashboardEventViewModel.PikettChecks.Add(_db.Events.Where(x => x.Date == date).Select(x => x.Subject.Name).Any(new List<string> { "Pikett", "Pikett am Wochenende" }.Contains));
+                    }
                 }
 
-                dashboardEventViewModels.Add(dashboardEventViewModel);
+                dashboardEventViewModel.Events.Add(user.Fullname, events);
             }
 
-            return View(dashboardEventViewModels);
+            return View(dashboardEventViewModel);
         }
 
         public ActionResult Create()

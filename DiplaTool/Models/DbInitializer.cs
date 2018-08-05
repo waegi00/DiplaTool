@@ -48,8 +48,8 @@ namespace DiplaTool.Models
             var negrip = new ApplicationUser
             {
                 Email = "patrick.negri@post.ch",
-                Firstname = "Negri",
-                Lastname = "Patrick",
+                Firstname = "Patrick",
+                Lastname = "Negri",
                 UserName = "negrip"
             };
 

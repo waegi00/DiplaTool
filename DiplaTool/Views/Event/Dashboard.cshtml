@@ -1,4 +1,4 @@
-﻿@model ICollection<DiplaTool.ViewModels.Event.DashboardEventViewModel>
+﻿@model DiplaTool.ViewModels.Event.DashboardEventViewModel
 
 @{
     ViewBag.Title = "Dienstplan";
@@ -9,24 +9,26 @@
 <h3>@DateTime.Today.ToString("Y")</h3>
 
 <table class="table table-bordered">
+    @* Kopfzeile der Tabelle *@
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.ElementAt(0).UserName)
+            Name
         </th>
-        @foreach (var key in Model.ElementAt(0).Events.Keys)
+        @foreach (var key in Model.Events.Values.ElementAt(0).Keys)
         {
             <th>@key.ToString("dd")</th>
         }
     </tr>
 
-    @foreach (var item in Model)
+    @* Dienste *@
+    @foreach (var item in Model.Events)
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.UserName)
+                @Html.DisplayFor(modelItem => item.Key)
             </td>
 
-            @foreach (var value in item.Events.Values)
+            @foreach (var value in item.Value.Values)
             {
                 if (value != null)
                 {
@@ -44,23 +46,26 @@
             }
         </tr>
     }
+
+    @* Dienstchecks *@
     <tr>
         <td>
-            @Html.DisplayNameFor(modelItem => Model.ElementAt(0).DienstChecks)
+            @Html.DisplayNameFor(modelItem => Model.DienstChecks)
         </td>
-        @foreach (var dienstCheck in Model.ElementAt(0).DienstChecks)
+        @foreach (var dienstCheck in Model.DienstChecks)
         {
-            <td style="background-color: @Model.ElementAt(0).GetColor(dienstCheck)"></td>
-        }
-    </tr>
-    <tr>
-        <td>
-            @Html.DisplayNameFor(modelItem => Model.ElementAt(0).PikettChecks)
-        </td>
-        @foreach (var pikettCheck in Model.ElementAt(0).PikettChecks)
-        {
-            <td style="background-color: @Model.ElementAt(0).GetColor(pikettCheck)"></td>
+            <td style="background-color: @Model.GetColor(dienstCheck)"></td>
         }
     </tr>
 
+    @* Pikettchecks *@
+    <tr>
+        <td>
+            @Html.DisplayNameFor(modelItem => Model.PikettChecks)
+        </td>
+        @foreach (var pikettCheck in Model.PikettChecks)
+        {
+            <td style="background-color: @Model.GetColor(pikettCheck)"></td>
+        }
+    </tr>
 </table>

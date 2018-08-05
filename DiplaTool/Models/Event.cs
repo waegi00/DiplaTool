@@ -13,7 +13,7 @@ namespace DiplaTool.Models
         [Required]
         public virtual ApplicationUser Assignee { get; set; }
 
-        [Required, DataType(DataType.Date), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
+        [Required, DataType(DataType.Date), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}"), Display(Name = "Datum")]
         public DateTime Date { get; set; }
 
         public string Body => "Dieser Eintrag wurde automatisch vom DiplaTool generiert.";

@@ -13,28 +13,34 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Subject.Name)
+            @Html.DisplayNameFor(model => model.Date)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Date)
+            @Html.DisplayNameFor(model => model.Assignee.Fullname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Subject.Name)
         </th>
         <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                <a href="@Url.Action("Edit", "Subject", new { id = item.Subject.Id })">@Html.DisplayFor(modelItem => item.Subject.Name)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.ActionLink("Bearbeiten", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Löschen", "Delete", new { id = item.Id })
-            </td>
-        </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", "ApplicationUser", new { id = item.Assignee.Id })">@Html.DisplayFor(modelItem => item.Assignee.Fullname)</a>
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", "Subject", new { id = item.Subject.Id })">@Html.DisplayFor(modelItem => item.Subject.Name)</a>
+        </td>
+        <td>
+            @Html.ActionLink("Bearbeiten", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Löschen", "Delete", new { id = item.Id })
+        </td>
+    </tr>
     }
 
 </table>
